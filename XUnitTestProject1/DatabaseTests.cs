@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace XUnitTestProject1
+namespace EfCoreBugExperiment
 {
     public abstract class DatabaseTests
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUnitTestProject1", "XUnitTestProject1\XUnitTestProject1.csproj", "{79513185-23CF-42A3-A932-AC8577EB5E39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EfCoreBugExperiment", "XUnitTestProject1\EfCoreBugExperiment.csproj", "{79513185-23CF-42A3-A932-AC8577EB5E39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

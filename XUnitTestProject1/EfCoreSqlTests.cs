@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace XUnitTestProject1
+namespace EfCoreBugExperiment
 {
     public class EfCoreSqlTests : DatabaseTests
     {
