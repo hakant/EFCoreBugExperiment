@@ -8,7 +8,7 @@ namespace EfCoreBugExperiment
     public abstract class DatabaseTests
     {
         protected DbContextOptions<MyDbContext> ContextOptions;
-        private readonly string _addressId = Guid.NewGuid().ToString();
+        private readonly string _personId = Guid.NewGuid().ToString();
 
         protected DatabaseTests(DbContextOptions<MyDbContext> contextOptions)
         {
@@ -22,40 +22,53 @@ namespace EfCoreBugExperiment
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
 
-            context.Addresses.Add(new Address()
+            context.Persons.Add(new Person()
             {
-                Id = _addressId,
-                Street = "Damrak",
-                PostCode = "1000AB",
-                City = "Amsterdam",
+                Id = _personId,
+                Name = "Hakan Tuncer"
             });
 
             context.SaveChanges();
         }
 
         [Fact]
-        public async Task Adding_Related_Entity_OnTheFly_Works()
+        public async Task Adding_ChainOfEntities_OnTheFly_Works()
+        {
+            // Act
+            await using var context = new MyDbContext(ContextOptions);
+            await context.Persons.AddAsync(new Person()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = "Hakan Tuncer",
+                Address = new Address
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Street = "Damrak",
+                    PostCode = "1000AB",
+                    City = "Amsterdam",
+                    Extension = new AddressExtension()
+                }
+            });
+
+            await context.SaveChangesAsync();
+        }
+
+        [Fact]
+        public async Task Adding_Related_Entity_ToAnExisting_Entity_OnTheFly_Works()
         {
             // Act
             await using (var context = new MyDbContext(ContextOptions))
             {
-                var address = await context.Addresses.FindAsync(_addressId);
-                address.Person = new Person
+                var person = await context.Persons.FirstOrDefaultAsync(p => p.Id == _personId);
+                person.Address = new Address
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = "Hakan Tuncer"
+                    Street = "Damrak",
+                    PostCode = "1000AB",
+                    City = "Amsterdam",
+                    Extension = new AddressExtension()
                 };
                 await context.SaveChangesAsync();
-            }
-
-            // Assert
-            await using (var context = new MyDbContext(ContextOptions))
-            {
-                var personCount = await context.Persons.CountAsync();
-                var addressCount = await context.Addresses.CountAsync();
-
-                Assert.Equal(1, personCount);
-                Assert.Equal(1, addressCount);
             }
         }
     }
